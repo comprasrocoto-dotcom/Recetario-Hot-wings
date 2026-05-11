@@ -186,16 +186,17 @@ const SHEETS=[
 {name:'AGUARDIENTE',gid:1153313622,icon:'🥃',section:'LICORES'},
 {name:'WHISKY',gid:1475779010,icon:'🥃',section:'LICORES'},
 ];
+function driveImg(id){return 'https://drive.google.com/thumbnail?id='+id+'&sz=w500';}
 const PHOTOS={
-'COMBO ALITAS #1':'https://lh3.googleusercontent.com/d/1IPgedK28w2Xl1GDpwcRL5Dg86nJ_WvMV',
-'COMBO ALITAS #2':'https://lh3.googleusercontent.com/d/1pKTuI0YLZFwPBWY9FVIwVuZIEUV384Ob',
-'COMBO ALITAS #3':'https://lh3.googleusercontent.com/d/1pciUzmeP7fM7eAjZcPBf2aF1pXjqmS4T',
-'COMBO ALITAS #4':'https://lh3.googleusercontent.com/d/1WIBlc0ftArZtlGoZMUAfzQVFAmi64Skm',
-'COMBO ALITAS #5':'https://lh3.googleusercontent.com/d/1xmKq_RyiaZSLDdltvxZixb2-tg_fkYHk',
-'HAMBURGUESA DE POLLO':'https://lh3.googleusercontent.com/d/1-YZp8XgrNZRpB0TqW5PeYz99PS28sA_m',
-'HAMBURGUESA SMASH HOT WINGS':'https://lh3.googleusercontent.com/d/1U6wsvrsXgfZ-7wGiMziMscWm0t7XJ0h0',
-'PERRO CLASICO':'https://lh3.googleusercontent.com/d/1yb1YLNanJQxMhtRjsy7PYvXfx-7uUiQA',
-'PERRO TEX MEX':'https://lh3.googleusercontent.com/d/1ikkHT5s72G8oJXuwS-pC1XMcS1Bpz0tc',
+'COMBO ALITAS #1':driveImg('1IPgedK28w2Xl1GDpwcRL5Dg86nJ_WvMV'),
+'COMBO ALITAS #2':driveImg('1pKTuI0YLZFwPBWY9FVIwVuZIEUV384Ob'),
+'COMBO ALITAS #3':driveImg('1pciUzmeP7fM7eAjZcPBf2aF1pXjqmS4T'),
+'COMBO ALITAS #4':driveImg('1WIBlc0ftArZtlGoZMUAfzQVFAmi64Skm'),
+'COMBO ALITAS #5':driveImg('1xmKq_RyiaZSLDdltvxZixb2-tg_fkYHk'),
+'HAMBURGUESA DE POLLO':driveImg('1-YZp8XgrNZRpB0TqW5PeYz99PS28sA_m'),
+'HAMBURGUESA SMASH HOT WINGS':driveImg('1U6wsvrsXgfZ-7wGiMziMscWm0t7XJ0h0'),
+'PERRO CLASICO':driveImg('1yb1YLNanJQxMhtRjsy7PYvXfx-7uUiQA'),
+'PERRO TEX MEX':driveImg('1ikkHT5s72G8oJXuwS-pC1XMcS1Bpz0tc'),
 };
 let allRecipes=[],currentCat='ALL',searchQ='',viewMode='grid';
 const SKIP_RE=/^(artículo|articulo|ingrediente|und|unidad|coste|costo|item|total|columna|analisis|análisis)/i;
