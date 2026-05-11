@@ -3,15 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌿 Recetario Malanga</title>
+<title>🍗 Recetario Hot Wings</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0} 
+*{box-sizing:border-box;margin:0;padding:0}
 :root{
---cream:#F9E8E8;--cream2:#F2D8D8;--brown:#2B4D2E;--orange:#2B4D2E;
---green:#2B4D2E;--dark:#1a2e1c;--mid:#3d5c40;--light:#5a7a5d;
---white:#ffffff;--shadow:0 2px 16px rgba(43,77,46,.15);
---red:#cc2200;--sidebar:#2B4D2E;--border:#c8d8c9;--card:#ffffff;
---accent:#2B4D2E;--accent2:#1e3820;h
+--cream:#FFF5F0;--cream2:#FFE8DC;--dark:#1a0a00;--mid:#5c2a00;--light:#8c5a3a;
+--white:#ffffff;--shadow:0 2px 16px rgba(180,50,0,.15);
+--red:#c8340a;--sidebar:#c8340a;--border:#f0c8b0;--card:#ffffff;
+--accent:#c8340a;--accent2:#a02800;--teal:#e06820;
 }
 body{font-family:'Segoe UI',Georgia,sans-serif;background:var(--cream);color:var(--dark);display:flex;min-height:100vh}
 .sidebar{width:260px;min-width:260px;background:var(--sidebar);border-right:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;height:100vh;position:sticky;top:0;overflow-y:auto}
@@ -43,16 +42,16 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:var(--cream);color:var
 .view-btn{background:var(--cream2);border:1px solid var(--border);color:var(--mid);padding:6px 10px;border-radius:6px;cursor:pointer;font-size:1rem;transition:.15s}
 .view-btn.active,.view-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
 .search-wrap{padding:8px 28px 16px}
-.search-box{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 14px;box-shadow:0 1px 4px rgba(43,77,46,.08)}
+.search-box{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 14px;box-shadow:0 1px 4px rgba(180,50,0,.08)}
 .search-box input{flex:1;background:none;border:none;outline:none;color:var(--dark);font-size:.9rem}
 .search-box input::placeholder{color:var(--light)}
 .grid-wrap{padding:0 20px 32px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
 .grid.list-mode{grid-template-columns:1fr}
-.card{background:var(--card);border-radius:12px;overflow:hidden;cursor:pointer;transition:.2s;border:1px solid var(--border);box-shadow:0 1px 6px rgba(43,77,46,.08)}
+.card{background:var(--card);border-radius:12px;overflow:hidden;cursor:pointer;transition:.2s;border:1px solid var(--border);box-shadow:0 1px 6px rgba(180,50,0,.08)}
 .card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
 .card-img{height:160px;background:var(--cream2);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-.card-img img{width:100%;height:100%;object-fit:contain;max-height:100%}
+.card-img img{width:100%;height:100%;object-fit:cover;max-height:100%}
 .card-img-ph{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--light);font-size:.75rem}
 .logo-plate{font-size:2.5rem}
 .list-mode .card{display:flex;flex-direction:row}
@@ -66,9 +65,9 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:var(--cream);color:var
 .loading-state,.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;color:var(--light);gap:16px;grid-column:1/-1}
 .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.modal-bg{position:fixed;inset:0;background:rgba(43,77,46,.4);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bg{position:fixed;inset:0;background:rgba(150,40,0,.4);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px}
 .modal-bg.open{display:flex}
-.modal{background:#fff;border-radius:16px;max-width:680px;width:100%;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--border);box-shadow:0 8px 32px rgba(43,77,46,.2)}
+.modal{background:#fff;border-radius:16px;max-width:680px;width:100%;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--border);box-shadow:0 8px 32px rgba(180,50,0,.2)}
 .modal-head{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 24px;border-bottom:1px solid var(--border);background:var(--sidebar)}
 .m-cat{font-size:.7rem;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
 .m-name{font-size:1.4rem;font-weight:700;color:#fff}
@@ -87,7 +86,7 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:var(--cream);color:var
 .step-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px}
 .step-num{min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700}
 .step-num.orange{background:var(--accent);color:#fff}
-.step-num.teal{background:#5a8f5d;color:#fff}
+.step-num.teal{background:var(--teal);color:#fff}
 .step-text{font-size:.875rem;color:var(--mid);line-height:1.5}
 .notes-block{background:var(--cream);border-radius:10px;padding:14px;border:1px solid var(--border)}
 .notes-title{font-size:.7rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
@@ -95,6 +94,10 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:var(--cream);color:var
 .rendimiento-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;border-radius:20px;padding:4px 14px;font-size:.8rem;font-weight:700;margin-bottom:0}
 .rendimiento-wrap{border-top:2px solid var(--border);padding-top:14px;display:flex;align-items:center;gap:10px}
 .rendimiento-label{font-size:.7rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.07em}
+.precio-wrap{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+.precio-badge{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:4px 14px;font-size:.8rem;font-weight:700}
+.precio-badge.venta{background:var(--accent);color:#fff}
+.precio-badge.costo{background:var(--cream2);color:var(--mid);border:1px solid var(--border)}
 @media(max-width:700px){.sidebar{display:none}.topbar{padding:16px 16px 8px}.grid-wrap{padding:0 10px 24px}.grid{grid-template-columns:1fr 1fr;gap:12px}.topbar-title h2{font-size:1.3rem}}
 </style>
 </head>
@@ -102,8 +105,8 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:var(--cream);color:var
 <aside class="sidebar" id="sidebar">
 <div class="sidebar-logo">
 <div class="logo-box">
-<div class="logo-icon">🌿</div>
-<div class="logo-text"><h1>Malanga</h1><p>Recetario Digital</p></div>
+<div class="logo-icon">🍗</div>
+<div class="logo-text"><h1>Hot Wings</h1><p>Recetario Digital</p></div>
 </div>
 </div>
 <div class="sidebar-all active" id="btn-all" onclick="filterCat('ALL')">
@@ -152,76 +155,117 @@ body{font-family:'Segoe UI',Georgia,sans-serif;background:var(--cream);color:var
 </div>
 </div>
 <script>
-const SID = '1yWuJ_DiEr2HQG0TQrtklnkawvQvTP9UB';
+const SID = '10o7stR6GLsko2C3tSSn0Wo-MU26iTOxg';
 const SHEETS=[
-{name:'ENTRADAS',sheetName:'ENTRADAS',gid:1004009672,icon:'🍢',section:'COCINA'},
-{name:'LOS ARREBATOS DEL CHEF',sheetName:'LOS ARREBATOS DEL CHEF',gid:2047073830,icon:'👨‍🍳',section:'COCINA'},
-{name:'BRUNCH',sheetName:'BRUNCH',gid:25543534,icon:'🥐',section:'COCINA'},
-{name:'CEVICHES',sheetName:'CEVICHES',gid:1504882093,icon:'🍋',section:'COCINA'},
-{name:'ARROCES',sheetName:'ARROCES',gid:1535382229,icon:'🍚',section:'COCINA'},
-{name:'LANGOSTINOS',sheetName:'LANGOSTINOS',gid:1002169916,icon:'🦐',section:'COCINA'},
-{name:'FUERTES MAR',sheetName:'FUERTES MAR',gid:1858018651,icon:'🐟',section:'COCINA'},
-{name:'FUERTES TIERRA',sheetName:'FUERTES TIERRA',gid:466578269,icon:'🥩',section:'COCINA'},
-{name:'FUERTES MAR Y TIERRA',sheetName:'FUERTES MAR Y TIERRA',gid:1362936680,icon:'🌊',section:'COCINA'},
-{name:'ENSALADAS',sheetName:'ENSALADAS',gid:1451409895,icon:'🥗',section:'COCINA'},
-{name:'POSTRES',sheetName:'POSTRES',gid:704065286,icon:'🍮',section:'COCINA'},
-{name:'MENU INFANTIL',sheetName:'MENU INFANTIL',gid:1814532757,icon:'👶',section:'COCINA'},
-{name:'SUB RECETAS COCINA',sheetName:'SUB RECETAS COCINA',gid:488065861,icon:'📦',section:'ESPECIAL'},
-{name:'SUB RECETAS BAR',sheetName:'SUB RECETAS BAR',gid:1980348282,icon:'🍹',section:'ESPECIAL'},
-{name:'COCTELES MALANGA',sheetName:'COCTELES MALANGA',gid:1252827523,icon:'🍹',section:'COCTELES & BEBIDAS'},
-{name:'COCTELES TRADICIONALES',sheetName:'COCTELES TRADICIONALES',gid:142464926,icon:'🍸',section:'COCTELES & BEBIDAS'},
-{name:'MOCKTAILS',sheetName:'MOCKTAILS',gid:415492431,icon:'🧃',section:'COCTELES & BEBIDAS'},
-{name:'SANGRIAS',sheetName:'SANGRIAS',gid:79532231,icon:'🍷',section:'COCTELES & BEBIDAS'},
-{name:'SODAS',sheetName:'SODAS',gid:1302499577,icon:'🥤',section:'BEBIDAS'},
-{name:'JUGOS NATURALES',sheetName:'JUGOS NATURALES',gid:479611903,icon:'🍊',section:'BEBIDAS'},
-{name:'REFAJO',sheetName:'REFAJO',gid:1306430419,icon:'🍺',section:'BEBIDAS'},
-{name:'BEBIDAS',sheetName:'BEBIDAS',gid:646091704,icon:'💧',section:'BEBIDAS'},
-{name:'MEZCLADORES',sheetName:'MEZCLADORES',gid:1461050500,icon:'🧃',section:'BEBIDAS'},
-{name:'CHAMPANAS Y ESPUMOSOS',sheetName:'CHAMPANAS Y ESPUMOSOS',gid:499281416,icon:'🥂',section:'VINOS'},
-{name:'VINO ROSADO',sheetName:'VINO ROSADO',gid:1479440870,icon:'🌸',section:'VINOS'},
-{name:'VINO BLANCO',sheetName:'VINO BLANCO',gid:706865613,icon:'🍾',section:'VINOS'},
-{name:'VINO TINTO',sheetName:'VINO TINTO',gid:86400907,icon:'🍷',section:'VINOS'},
-{name:'TEQUILA',sheetName:'TEQUILA',gid:1247235973,icon:'🥃',section:'LICORES'},
-{name:'MEZCAL',sheetName:'MEZCAL',gid:886009737,icon:'🥃',section:'LICORES'},
-{name:'GINEBRA',sheetName:'GINEBRA',gid:800657558,icon:'🍸',section:'LICORES'},
-{name:'VODKA',sheetName:'VODKA',gid:566868233,icon:'🥃',section:'LICORES'},
-{name:'RON',sheetName:'RON',gid:1533713128,icon:'🥃',section:'LICORES'},
-{name:'AGUARDIENTE',sheetName:'AGUARDIENTE',gid:1827910393,icon:'🥃',section:'LICORES'},
-{name:'AROMATICAS',sheetName:'AROMATICAS',gid:511850602,icon:'🌿',section:'LICORES'},
-{name:'WISKHY',sheetName:'WISKHY',gid:210653851,icon:'🥃',section:'LICORES'},
-{name:'CERVEZAS',sheetName:'CERVEZAS',gid:509435971,icon:'🍺',section:'CERVEZAS & MALTAS'},
-{name:'MALTAS',sheetName:'MALTAS',gid:2035984714,icon:'🍺',section:'CERVEZAS & MALTAS'},
-{name:'CAFES',sheetName:'CAFES',gid:1471355490,icon:'☕',section:'CAFES'},
+{name:'DESAYUNOS',gid:2092483226,icon:'🍳',section:'COCINA'},
+{name:'ENTRADAS',gid:1694966311,icon:'🍢',section:'COCINA'},
+{name:'GUARNICIONES',gid:1725043445,icon:'🍟',section:'COCINA'},
+{name:'ENTRE PANES',gid:945235689,icon:'🍔',section:'COCINA'},
+{name:'TEX MEX',gid:1983252607,icon:'🌮',section:'COCINA'},
+{name:'PARRILLA',gid:416312829,icon:'🔥',section:'COCINA'},
+{name:'FUERTE',gid:731841443,icon:'🍽️',section:'COCINA'},
+{name:'ALITAS',gid:1969518266,icon:'🍗',section:'COCINA'},
+{name:'COMBOS',gid:927100624,icon:'🎁',section:'COCINA'},
+{name:'ENSALADAS',gid:904728913,icon:'🥗',section:'COCINA'},
+{name:'MENU INFANTIL',gid:133532976,icon:'👶',section:'COCINA'},
+{name:'POSTRES',gid:791453397,icon:'🍮',section:'COCINA'},
+{name:'SUB RECETAS COCINA',gid:1117243696,icon:'📦',section:'ESPECIAL'},
+{name:'SUB RECETAS BAR',gid:1629668626,icon:'🍹',section:'ESPECIAL'},
+{name:'REFRIGERIOS',gid:2119894248,icon:'🧆',section:'ESPECIAL'},
+{name:'SODAS',gid:1083424527,icon:'🥤',section:'BEBIDAS'},
+{name:'JUGOS',gid:1165651199,icon:'🍊',section:'BEBIDAS'},
+{name:'BEBIDAS NO ALCOHOLICAS',gid:1600183329,icon:'💧',section:'BEBIDAS'},
+{name:'MEZCLADORES',gid:1796361065,icon:'🧃',section:'BEBIDAS'},
+{name:'MALTEADAS',gid:2039065010,icon:'🥛',section:'BEBIDAS'},
+{name:'CAFES',gid:1041420439,icon:'☕',section:'BEBIDAS'},
+{name:'CHELADAS',gid:271819557,icon:'🍺',section:'CERVEZAS'},
+{name:'JARRAS',gid:603525191,icon:'🍺',section:'CERVEZAS'},
+{name:'CERVEZAS',gid:1233666965,icon:'🍻',section:'CERVEZAS'},
+{name:'COTELES TRADICIONALES',gid:834911708,icon:'🍸',section:'COCTELES'},
+{name:'COCTELES DE LA CASA',gid:114262183,icon:'🍹',section:'COCTELES'},
+{name:'TEQUILA',gid:1689258526,icon:'🥃',section:'LICORES'},
+{name:'GINEGRA',gid:2030883620,icon:'🍸',section:'LICORES'},
+{name:'MEZCAL',gid:831146238,icon:'🥃',section:'LICORES'},
+{name:'RON',gid:1701802419,icon:'🥃',section:'LICORES'},
+{name:'AGUARDIENTE',gid:1153313622,icon:'🥃',section:'LICORES'},
+{name:'WHISKY',gid:1475779010,icon:'🥃',section:'LICORES'},
 ];
 const PHOTOS={};
 let allRecipes=[],currentCat='ALL',searchQ='',viewMode='grid';
-const SKIP_RE=/^(artículo|articulo|ingrediente|und|unidad|coste|costo|item|total|columna)/i;
-const UNIT_WORDS=['g','kg','uds','und','ml','l','oz','lb','gr','cc','porciones','onz'];
+const SKIP_RE=/^(artículo|articulo|ingrediente|und|unidad|coste|costo|item|total|columna|analisis|análisis)/i;
+const UNIT_WORDS=['g','kg','uds','und','ml','l','oz','lb','gr','cc','porciones','onz','kilo'];
 function isUnit(v){return UNIT_WORDS.includes((v||'').toLowerCase().trim());}
-function parseCSV(t){const rows=[];for(const line of t.split('\n')){const cols=[];let cur='',inQ=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}else if(ch===','&&!inQ){cols.push(cur.trim());cur='';}else cur+=ch;}cols.push(cur.trim());rows.push(cols);}return rows;}
+function isMoney(v){return (v||'').includes('$')||(v||'').includes('#DIV')||(v||'').includes('#N/A');}
+function parseCSV(t){
+const rows=[];
+for(const line of t.split('\n')){
+const cols=[];let cur='',inQ=false;
+for(let i=0;i<line.length;i++){
+const ch=line[i];
+if(ch==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
+else if(ch===','&&!inQ){cols.push(cur.trim());cur='';}
+else cur+=ch;
+}
+cols.push(cur.trim());
+rows.push(cols);
+}
+return rows;
+}
+function cleanText(v){
+// Remove encoding artifacts and clean text
+return (v||'').replace(/Ã­/g,'í').replace(/Ã©/g,'é').replace(/Ã³/g,'ó').replace(/Ãº/g,'ú').replace(/Ã¡/g,'á').replace(/Ã±/g,'ñ').replace(/Ã'/g,'Ñ').replace(/Ã‰/g,'É').replace(/Ã"/g,'Ó').replace(/Ã/g,'Á').replace(/Â°/g,'°').replace(/Ã'/g,'Ó').trim();
+}
 function parseRecipes(rows,sheetName){
-const recipes=[];let cur=null;
-let fmt='B';
-for(const row of rows){const c0=(row[0]||'').trim();const c1=(row[1]||'').trim();if(c0&&!c1&&c0.length>3&&!SKIP_RE.test(c0)&&!c0.includes('$')&&!c0.match(/^[0-9]/)){fmt='A';break;}if(!c0&&c1&&c1.length>3&&!SKIP_RE.test(c1)&&!c1.includes('$')&&!c1.match(/^[0-9]/)){fmt='B';break;}}
+const recipes=[];let cur=null;let inPrep=false;let inEmplatado=false;
 for(const row of rows){
-const c0=(row[0]||'').trim();const c1=(row[1]||'').trim();const c2=(row[2]||'').trim();const c3=(row[3]||'').trim();const c4=(row[4]||'').trim();const c12=(row[12]||'').trim();
-const mLow=c12.toLowerCase();const isSL=mLow==='preparacion'||mLow==='preparación'||mLow==='emplatado';
-const isStep=c12&&!isSL&&c12.length>3&&!c12.includes('$')&&!c12.includes('#');
-if(fmt==='B'){
-const isH=SKIP_RE.test(c1)||/^(unidad|unidades)/i.test(c2);
-const isRN=!c0&&c1&&!c2&&!c3&&!isH&&c1.length>2&&!isUnit(c1)&&!/^[$#0-9]/.test(c1);
-if(isRN){cur={name:c1,category:sheetName,ingredients:[],prepSteps:[],plateSteps:[],notes:'',rendimiento:null};recipes.push(cur);continue;}
+const c0=cleanText(row[0]||'');
+const c1=cleanText(row[1]||'');
+const c2=cleanText(row[2]||'');
+const c3=cleanText(row[3]||'');
+const c4=cleanText(row[4]||'');
+const c5=cleanText(row[5]||'');
+const c12=cleanText(row[12]||'');
+// Detect section labels in col 12
+const mLow=c12.toLowerCase();
+const isSectionLabel=mLow==='preparacion'||mLow==='preparación'||mLow==='emplatado';
+// Detect recipe name: col A empty, col B has name, cols C-E empty, col B is not a header or money
+const isHeader=SKIP_RE.test(c1)||/^(unidad|unidades)/i.test(c2);
+const isRecipeName=!c0&&c1&&!c2&&!c3&&!isHeader&&c1.length>2&&!isUnit(c1)&&!isMoney(c1)&&!/^[$#0-9]/.test(c1);
+if(isRecipeName){
+inPrep=false;inEmplatado=false;
+cur={name:c1,category:sheetName,ingredients:[],prepSteps:[],plateSteps:[],notes:'',precio:null,costo:null};
+recipes.push(cur);
+// Check col 12 in same row for step content or section label
+if(c12&&!isSectionLabel&&c12.length>5&&!c12.includes('$')&&!c12.includes('#')){
+cur.prepSteps.push(c12);
+}
+continue;
+}
 if(!cur)continue;
-if(mLow==='emplatado')cur._ip=true;else if(mLow==='preparacion'||mLow==='preparación')cur._ip=false;
-if((row[9]||'').toLowerCase().includes('rendimiento')&&row[10])cur.rendimiento=row[10].trim();
-if(isStep){if(cur._ip)cur.plateSteps.push(c12);else cur.prepSteps.push(c12);}
-if(c1&&!isH&&!isUnit(c1)&&c1.length>1&&(c2||c3)&&!c1.startsWith('$')&&!c1.startsWith('#')&&!/^[0-9]+$/.test(c1)){cur.ingredients.push({name:c1,unit:c2,qty:c3});}
-}else{
-const isH=SKIP_RE.test(c0)||/^(unidad|unidades)/i.test(c1);
-const isRN=c0&&!c1&&!c2&&!isH&&c0.length>2&&!isUnit(c0)&&!/^[$#0-9]/.test(c0)&&!c0.includes('$');
-if(isRN){cur={name:c0,category:sheetName,ingredients:[],prepSteps:[],plateSteps:[],notes:'',rendimiento:null};recipes.push(cur);continue;}
-if(!cur)continue;
-if(c0&&!isH&&!isUnit(c0)&&c0.length>1&&(c1||c4)&&!c0.startsWith('$')&&!/^[0-9]+$/.test(c0)){cur.ingredients.push({name:c0,unit:c1,qty:c4});}
+// Handle section labels
+if(isSectionLabel){
+if(mLow==='preparacion'||mLow==='preparación'){inPrep=true;inEmplatado=false;}
+else if(mLow==='emplatado'){inPrep=false;inEmplatado=true;}
+continue;
+}
+// Capture step text from col 12
+if(c12&&c12.length>5&&!c12.includes('$')&&!c12.includes('#')&&!c12.includes('ANALISIS')&&!c12.includes('COSTO')&&!c12.includes('VALOR')&&!c12.includes('MARGEN')&&!c12.includes('GANANCIA')&&!c12.includes('IPO')){
+if(inEmplatado)cur.plateSteps.push(c12);
+else if(inPrep)cur.prepSteps.push(c12);
+}
+// Capture precio de venta
+if(c1==='VALOR ANTES DE IPO'&&(row[10]||'').trim()&&!isMoney(row[10])){
+const pv=(row[10]||'').replace(/[$\s.]/g,'').replace(/,/g,'.');
+if(!isNaN(parseFloat(pv)))cur.precio=row[10].trim();
+}
+// Capture ingredients: col B=name, C=unit, D=qty (unidades netas), F=unidades
+const isIngH=SKIP_RE.test(c1)||/^(unidad|unidades)/i.test(c2);
+if(c1&&!isIngH&&c1.length>1&&(c2||c3)&&!isMoney(c1)&&!isUnit(c1)&&!/^[0-9]+$/.test(c1)&&!c1.startsWith('#')&&c1!=='ANALISIS RECETA'){
+// qty = col D (c3 = unidades netas) or col F (c5 = unidades after merma)
+const qty=c5||c3;
+if(c2||qty){
+cur.ingredients.push({name:c1,unit:c2,qty:qty});
+}
 }
 }
 return recipes.filter(r=>r.name&&r.ingredients.length>0);
@@ -268,7 +312,7 @@ function filterCat(cat){currentCat=cat;searchQ='';document.getElementById('searc
 function handleSearch(){searchQ=document.getElementById('search-input').value.toLowerCase().trim();renderGrid();}
 function getFiltered(){let l=allRecipes;if(currentCat!=='ALL')l=l.filter(r=>r.category===currentCat);if(searchQ)l=l.filter(r=>r.name.toLowerCase().includes(searchQ)||r.ingredients.some(i=>i.name.toLowerCase().includes(searchQ)));return l;}
 function setView(m){viewMode=m;document.getElementById('btn-grid').classList.toggle('active',m==='grid');document.getElementById('btn-list').classList.toggle('active',m==='list');renderGrid();}
-function getCardImg(r){const ph=PHOTOS[r.name.toUpperCase().trim()];if(ph)return '<div class="card-img card-img-photo"><img src="'+ph+'" alt="" loading="lazy" onerror="this.parentElement.className=\"card-img\""></div>';return '<div class="card-img"><div class="card-img-ph"><div class="logo-plate">🌿</div><span>'+r.category+'</span></div></div>';}
+function getCardImg(r){const ph=PHOTOS[r.name.toUpperCase().trim()];if(ph)return '<div class="card-img"><img src="'+ph+'" alt="'+r.name+'" loading="lazy" onerror="this.parentElement.innerHTML=\'<div class=card-img-ph><div class=logo-plate>🍗</div><span>'+r.category+'</span></div>\'"></div>';return '<div class="card-img"><div class="card-img-ph"><div class="logo-plate">🍗</div><span>'+r.category+'</span></div></div>';}
 function renderGrid(){
 const list=getFiltered();const cat=currentCat==='ALL'?'Todas las Recetas':currentCat.charAt(0)+currentCat.slice(1).toLowerCase();
 document.getElementById('page-title').textContent=cat;document.getElementById('page-sub').textContent=list.length+' receta'+(list.length===1?'':'s');
@@ -281,9 +325,9 @@ const r=allRecipes[idx];if(!r)return;
 document.getElementById('m-cat').textContent=r.category;document.getElementById('m-name').textContent=r.name;
 let body='';
 const ph=PHOTOS[r.name.toUpperCase().trim()];
-if(ph)body+='<div class="modal-photo"><img src="'+ph+'" alt="" loading="lazy" onerror="this.parentElement.style.display=\"none\""></div>';
-if(r.ingredients.length){body+='<div class="section-block"><div class="section-title">Ingredientes</div><table class="ing-table"><thead><tr><th>Artículo</th><th>Unidad de Medida</th><th>Cantidad</th></tr></thead><tbody>'+r.ingredients.map(i=>'<tr><td class="td-name">'+i.name+'</td><td>'+(i.unit||'-')+'</td><td>'+(i.qty||'-')+'</td></tr>').join('')+'</tbody></table></div>';}
-if(r.rendimiento){body+='<div class="rendimiento-wrap"><span class="rendimiento-label">Rendimiento</span><span class="rendimiento-badge">⚖ '+r.rendimiento+' g</span></div>';}
+if(ph)body+='<div class="modal-photo"><img src="'+ph+'" alt="'+r.name+'" loading="lazy" onerror="this.parentElement.style.display=\'none\'"></div>';
+if(r.precio){body+='<div class="precio-wrap"><span class="precio-badge venta">💰 Precio Venta: '+r.precio+'</span></div>';}
+if(r.ingredients.length){body+='<div class="section-block"><div class="section-title">Ingredientes</div><table class="ing-table"><thead><tr><th>Artículo</th><th>Unidad</th><th>Cantidad</th></tr></thead><tbody>'+r.ingredients.map(i=>'<tr><td class="td-name">'+i.name+'</td><td>'+(i.unit||'-')+'</td><td>'+(i.qty||'-')+'</td></tr>').join('')+'</tbody></table></div>';}
 if(r.prepSteps.length||r.plateSteps.length){body+='<div class="steps-wrap">';if(r.prepSteps.length){body+='<div class="steps-section"><div class="steps-section-title">Preparación</div>'+r.prepSteps.map((s,i)=>'<div class="step-item"><div class="step-num orange">'+(i+1)+'</div><div class="step-text">'+s+'</div></div>').join('')+'</div>';}if(r.plateSteps.length){body+='<div class="steps-section"><div class="steps-section-title">Emplatado</div>'+r.plateSteps.map((s,i)=>'<div class="step-item"><div class="step-num teal">'+(i+1)+'</div><div class="step-text">'+s+'</div></div>').join('')+'</div>';}body+='</div>';}
 if(r.notes&&r.notes.trim()){body+='<div class="notes-block"><div class="notes-title">Notas de Cocina</div><div class="notes-text">'+r.notes.trim()+'</div></div>';}
 document.getElementById('modal-body').innerHTML=body;document.getElementById('modal-bg').classList.add('open');document.body.style.overflow='hidden';
