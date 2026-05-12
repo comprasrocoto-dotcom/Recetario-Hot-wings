@@ -278,7 +278,7 @@ const firstA=firstCells[0]?String(firstCells[0].v||'').trim().toLowerCase():'';
 const off=/^art/.test(firstA)&&firstA.length<15?0:1;
 // First recipe name is stored in the column header (col B for off=1, col A for off=0)
 const colLabel=(data.table.cols[off]||{}).label||'';
-const firstRecipeName=colLabel.trim();
+const firstRecipeName=colLabel.replace(/\s*(Art[\u00ED\u0069]culo|ArtÃ­culo|Ingrediente|Unidad.*)/i,'').trim();
 const gvizRows=data.table.rows;
 const csvRows=gvizRows.map(row=>{
 const arr=[];
