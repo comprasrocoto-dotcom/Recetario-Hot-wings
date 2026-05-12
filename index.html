@@ -212,12 +212,10 @@ return (v||'').replace(/\u00C3\u00AD/g,'\u00ED').replace(/\u00C3\u00A9/g,'\u00E9
 function parseRecipes(rows,sheetName){
 // Auto-detect column offset: some sheets use col A (offset=0), others col B (offset=1)
 // Detect by checking if first non-empty row has data in col A with col B as unit
+// Detect column offset: offset=0 if header "Artículo" is in col A, offset=1 if in col B
 const off=rows.some(row=>{
-const a=String(row[0]||'').trim();
-const b=String(row[1]||'').trim();
-const c=String(row[2]||'').trim();
-// If col A has ingredient-like text and col B has unit-like text (uds/g/oz/ml/lt)
-return a&&/^(uds|g|oz|ml|lt|kg|cc|und)$/i.test(b)&&!c;
+const a=String(row[0]||'').trim().toLowerCase();
+return /^art/.test(a)&&a.length<15;
 })?0:1;
 const recipes=[];
 let cur=null;
