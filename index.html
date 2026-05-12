@@ -210,15 +210,25 @@ function clean(v){
 return (v||'').replace(/\u00C3\u00AD/g,'\u00ED').replace(/\u00C3\u00A9/g,'\u00E9').replace(/\u00C3\u00B3/g,'\u00F3').replace(/\u00C3\u00BA/g,'\u00FA').replace(/\u00C3\u00A1/g,'\u00E1').replace(/\u00C3\u00B1/g,'\u00F1').replace(/\u00C3\u0091/g,'\u00D1').replace(/\u00C3\u0089/g,'\u00C9').replace(/\u00C3\u0093/g,'\u00D3').replace(/\u00C3/g,'\u00C1').replace(/\u00C2\u00B0/g,'\u00B0').trim();
 }
 function parseRecipes(rows,sheetName){
+// Auto-detect column offset: some sheets use col A (offset=0), others col B (offset=1)
+// Detect by checking if first non-empty row has data in col A with col B as unit
+const off=rows.some(row=>{
+const a=String(row[0]||'').trim();
+const b=String(row[1]||'').trim();
+const c=String(row[2]||'').trim();
+// If col A has ingredient-like text and col B has unit-like text (uds/g/oz/ml/lt)
+return a&&/^(uds|g|oz|ml|lt|kg|cc|und)$/i.test(b)&&!c;
+})?0:1;
 const recipes=[];
 let cur=null;
 let phase='prep';
 for(const row of rows){
-const b=clean(row[1]||'');
-const c=clean(row[2]||'');
-const d=clean(row[3]||'');
-const f=clean(row[5]||'');
-const j=clean(row[9]||'');
+const b=clean(row[off]||'');
+const c=clean(row[off+1]||'');
+const d=clean(row[off+2]||'');
+const f=clean(row[off+4]||'');
+const j=clean(row[off===0?8:9]||'');
+const k=clean(row[off===0?9:10]||'');
 const m=clean(row[12]||'');
 const mLow=m.toLowerCase();
 const isName=b&&!c&&!HEADER_RE.test(b)&&!ANALYSIS_RE.test(b)&&b.length>2&&!/^[$#0-9]/.test(b);
@@ -230,7 +240,7 @@ continue;
 }
 if(!cur)continue;
 if(m){
-if(mLow==='preparacion'||mLow==='preparaci\u00F3n'){phase='prep';}
+if(mLow==='preparacion'||mLow==='preparación'){phase='prep';}
 else if(mLow==='emplatado'){phase='plate';}
 else if(!ANALYSIS_RE.test(m)&&m.length>3){
 if(phase==='plate')cur.plateSteps.push(m);
@@ -238,7 +248,7 @@ else cur.prepSteps.push(m);
 }
 }
 if(j==='VALOR ANTES DE IPO'){
-const v=clean(row[10]||'');
+const v=k;
 if(v&&!v.includes('#')&&v.replace(/[$., ]/g,'')!=='')cur.precio=v;
 }
 const isHeader=HEADER_RE.test(b);
@@ -249,6 +259,7 @@ cur.ingredients.push({name:b,unit:c,qty:fmtQty(f||d)});
 }
 return recipes.filter(r=>r.name&&r.ingredients.length>0);
 }
+
 async function loadSheet(sh){
 const url='https://docs.google.com/spreadsheets/d/'+SID+'/gviz/tq?tqx=out:json&gid='+sh.gid;
 for(let attempt=0;attempt<3;attempt++){
@@ -266,7 +277,7 @@ const arr=[];
 for(let i=0;i<25;i++){
 const cell=row.c&&row.c[i]?row.c[i]:null;
 if(!cell||cell.v===null||cell.v===undefined){arr.push('');}
-else if(i===10&&cell.f){arr.push(cell.f);}
+else if(cell.f&&String(cell.f).includes('$')){arr.push(cell.f);}
 else if(typeof cell.v==='number'){arr.push(String(cell.v));}
 else{arr.push(String(cell.v));}
 }
