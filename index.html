@@ -266,6 +266,7 @@ const arr=[];
 for(let i=0;i<25;i++){
 const cell=row.c&&row.c[i]?row.c[i]:null;
 if(!cell||cell.v===null||cell.v===undefined){arr.push('');}
+else if(i===10&&cell.f){arr.push(cell.f);}
 else if(typeof cell.v==='number'){arr.push(String(cell.v));}
 else{arr.push(String(cell.v));}
 }
