@@ -198,7 +198,7 @@ const PHOTOS={
 'PERRO TEX MEX':driveImg('1ikkHT5s72G8oJXuwS-pC1XMcS1Bpz0tc'),
 };
 let allRecipes=[],currentCat='ALL',searchQ='',viewMode='grid';
-const ANALYSIS_RE=/^(ANALISIS RECETA|COSTO DEL PLATO|MARGEN DE ERROR|COSTO [+] MARGEN|VALOR DE VENTA|IPOCONSUMO|VALOR ANTES DE IPO|MARGEN[.][,]?|GANANCIA|MARGEN PORCENTUAL)/i;
+const ANALYSIS_RE=/^(ANALISIS RECETA|COSTO DEL PLATO|MARGEN DE ERROR|COSTO [+] MARGEN|VALOR DE VENTA|IPOCONSUMO|VALOR ANTES DE IPO|MARGEN[.][,]?|GANANCIA|MARGEN PORCENTUAL|Rendimiento)/i;
 const HEADER_RE=/^(art[\xED\u00ED]culo|ingrediente|unidad medida|item)/i;
 function fmtQty(v){
 const s=(v||'').replace(/[^0-9.]/g,'');
@@ -211,8 +211,6 @@ return (v||'').replace(/\u00C3\u00AD/g,'\u00ED').replace(/\u00C3\u00A9/g,'\u00E9
 }
 function parseRecipes(rows,sheetName){
 // Auto-detect column offset: some sheets use col A (offset=0), others col B (offset=1)
-// Detect by checking if first non-empty row has data in col A with col B as unit
-// Detect column offset: offset=0 if header "Artículo" is in col A, offset=1 if in col B
 const off=rows.some(row=>{
 const a=String(row[0]||'').trim().toLowerCase();
 return /^art/.test(a)&&a.length<15;
@@ -231,7 +229,7 @@ const m=clean(row[12]||'');
 const mLow=m.toLowerCase();
 const isName=b&&!c&&!HEADER_RE.test(b)&&!ANALYSIS_RE.test(b)&&b.length>2&&!/^[$#0-9]/.test(b);
 if(isName){
-cur={name:b,category:sheetName,ingredients:[],prepSteps:[],plateSteps:[],notes:'',precio:null};
+cur={name:b,category:sheetName,ingredients:[],prepSteps:[],plateSteps:[],notes:'',precio:null,rendimiento:null};
 recipes.push(cur);
 phase='prep';
 continue;
@@ -248,6 +246,10 @@ else cur.prepSteps.push(m);
 if(j==='VALOR ANTES DE IPO'){
 const v=k;
 if(v&&!v.includes('#')&&v.replace(/[$., ]/g,'')!=='')cur.precio=v;
+}
+if(j==='Rendimiento'||j==='RENDIMIENTO'){
+const v=k;
+if(v&&!v.includes('#')&&v.replace(/[., ]/g,'')!=='')cur.rendimiento=v;
 }
 const isHeader=HEADER_RE.test(b);
 const isAnalysis=ANALYSIS_RE.test(b);
@@ -269,6 +271,14 @@ const t=await r.text();
 if(!t.includes('setResponse'))throw new Error('Not gviz JSON');
 const jsonStr=t.replace(/^[\s\S]*?setResponse\(/,'').replace(/\);?\s*$/,'');
 const data=JSON.parse(jsonStr);
+// Detect column offset from first data row
+const firstDataRow=data.table.rows[0];
+const firstCells=firstDataRow?firstDataRow.c||[]:[];
+const firstA=firstCells[0]?String(firstCells[0].v||'').trim().toLowerCase():'';
+const off=/^art/.test(firstA)&&firstA.length<15?0:1;
+// First recipe name is stored in the column header (col B for off=1, col A for off=0)
+const colLabel=(data.table.cols[off]||{}).label||'';
+const firstRecipeName=colLabel.trim();
 const gvizRows=data.table.rows;
 const csvRows=gvizRows.map(row=>{
 const arr=[];
@@ -281,6 +291,12 @@ else{arr.push(String(cell.v));}
 }
 return arr;
 });
+// Prepend synthetic first recipe row if we have a name from column header
+if(firstRecipeName&&firstRecipeName.length>2&&!/^(art|unidad|ingrediente|item)/i.test(firstRecipeName)){
+const synthRow=Array(25).fill('');
+synthRow[off]=firstRecipeName;
+csvRows.unshift(synthRow);
+}
 return parseRecipes(csvRows,sh.name);
 }catch(e){
 if(attempt<2){await new Promise(r=>setTimeout(r,1500*(attempt+1)));}
@@ -289,6 +305,7 @@ else{console.warn('Sheet:',sh.name,e.message);return[];}
 }
 return[];
 }
+
 async function loadAll(){
 setStatus('loading','Cargando recetas...');allRecipes=[];
 const BATCH=4;
@@ -328,12 +345,19 @@ document.getElementById('m-cat').textContent=r.category;document.getElementById(
 let body='';
 const ph=PHOTOS[r.name.toUpperCase().trim()];
 if(ph)body+='<div class="modal-photo"><img src="'+ph+'" alt="'+r.name+'" loading="lazy" onerror="this.parentElement.style.display=\'none\'"></div>';
-if(r.precio){body+='<div class="precio-wrap"><span class="precio-badge venta">\u{1F4B0} Precio de Venta: '+r.precio+'</span></div>';}
+const hasBadge=r.precio||r.rendimiento;
+if(hasBadge){
+body+='<div class="precio-wrap">';
+if(r.precio){body+='<span class="precio-badge venta">\u{1F4B0} Precio de Venta: '+r.precio+'</span>';}
+if(r.rendimiento){body+='<span class="precio-badge" style="background:#e06820;color:#fff">\u2696\uFE0F Rendimiento: '+r.rendimiento+' g</span>';}
+body+='</div>';
+}
 if(r.ingredients.length){body+='<div class="section-block"><div class="section-title">Ingredientes</div><table class="ing-table"><thead><tr><th>Art\u00EDculo</th><th>Unidad</th><th>Cantidad</th></tr></thead><tbody>'+r.ingredients.map(i=>'<tr><td class="td-name">'+i.name+'</td><td>'+(i.unit||'-')+'</td><td>'+(i.qty||'-')+'</td></tr>').join('')+'</tbody></table></div>';}
 if(r.prepSteps.length||r.plateSteps.length){body+='<div class="steps-wrap">';if(r.prepSteps.length){body+='<div class="steps-section"><div class="steps-section-title">Preparaci\u00F3n</div>'+r.prepSteps.map((s,i)=>'<div class="step-item"><div class="step-num orange">'+(i+1)+'</div><div class="step-text">'+s+'</div></div>').join('')+'</div>';}if(r.plateSteps.length){body+='<div class="steps-section"><div class="steps-section-title">Emplatado</div>'+r.plateSteps.map((s,i)=>'<div class="step-item"><div class="step-num teal">'+(i+1)+'</div><div class="step-text">'+s+'</div></div>').join('')+'</div>';}body+='</div>';}
 if(r.notes&&r.notes.trim()){body+='<div class="notes-block"><div class="notes-title">Notas</div><div class="notes-text">'+r.notes.trim()+'</div></div>';}
 document.getElementById('modal-body').innerHTML=body;document.getElementById('modal-bg').classList.add('open');document.body.style.overflow='hidden';
 }
+
 function closeModal(e){if(e.target===document.getElementById('modal-bg'))closeModalDirect();}
 function closeModalDirect(){document.getElementById('modal-bg').classList.remove('open');document.body.style.overflow='';}
 loadAll();setInterval(loadAll,5*60*1000);
